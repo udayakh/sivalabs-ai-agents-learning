@@ -1,0 +1,27 @@
+version: '3'
+
+tasks:
+  default:
+    cmds:
+      - task: test
+  format:
+    desc: Format Java sources
+    cmds:
+      - mvn spotless:apply
+  test:
+    desc: Run all tests and quality gates
+    cmds:
+      - mvn spotless:apply
+      - mvn clean verify
+  run:
+    desc: Run with embedded H2
+    cmds:
+      - mvn spring-boot:run
+  run-postgres:
+    desc: Run with PostgreSQL from compose.yaml (Docker required)
+    cmds:
+      - mvn spring-boot:run -Dspring-boot.run.profiles=postgres
+  run-ai:
+    desc: Run with OpenAI summaries (OPENAI_API_KEY required)
+    cmds:
+      - mvn spring-boot:run -Dspring-boot.run.profiles=ai

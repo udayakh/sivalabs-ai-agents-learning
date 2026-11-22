@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Bad request')}"></head>
+<body class="min-h-screen">
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+<main class="max-w-xl mx-auto px-4 py-20 text-center">
+    <h1 class="text-5xl font-bold text-amber-600">400</h1>
+    <p class="mt-4 text-gray-700" th:text="${message} ?: 'The request was invalid.'">The request was invalid.</p>
+    <a th:href="@{/products}" class="inline-block mt-6 text-emerald-700 underline">Back to products</a>
+</main>
+</body>
+</html>

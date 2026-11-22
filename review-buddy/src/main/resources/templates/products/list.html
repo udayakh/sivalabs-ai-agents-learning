@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Products')}"></head>
+<body class="min-h-screen">
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<main class="max-w-6xl mx-auto px-4 py-8">
+    <section class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-900">Discover products makers love</h1>
+        <p class="text-gray-600 mt-1">Honest reviews from the community, summarized by AI.</p>
+    </section>
+
+    <form th:action="@{/products}" method="get" class="flex flex-col md:flex-row gap-3 mb-4">
+        <input type="hidden" name="category" th:value="${criteria.categorySlug}">
+        <input type="search" name="q" th:value="${criteria.query}" placeholder="Search products..."
+               class="input md:flex-1" aria-label="Search products">
+        <select name="sort" class="input md:w-48" aria-label="Sort by">
+            <option th:each="s : ${sortOptions}" th:value="${s.code}" th:text="${s.label}"
+                    th:selected="${s == criteria.sort}">Newest</option>
+        </select>
+        <button type="submit" class="rounded-lg bg-emerald-600 text-white px-5 py-2 hover:bg-emerald-700">Search</button>
+    </form>
+
+    <div class="flex flex-wrap gap-2 mb-8">
+        <a th:href="@{/products(q=${criteria.query}, sort=${criteria.sort.code})}"
+           th:classappend="${criteria.categorySlug == ''} ? 'bg-emerald-600 text-white' : 'bg-white text-gray-700'"
+           class="px-3 py-1 rounded-full border border-emerald-200 text-sm">All</a>
+        <a th:each="c : ${categories}"
+           th:href="@{/products(q=${criteria.query}, category=${c.slug}, sort=${criteria.sort.code})}"
+           th:text="${c.name}"
+           th:classappend="${criteria.categorySlug == c.slug} ? 'bg-emerald-600 text-white' : 'bg-white text-gray-700'"
+           class="px-3 py-1 rounded-full border border-emerald-200 text-sm">Category</a>
+    </div>
+
+    <p th:if="${products.data.isEmpty()}" class="text-gray-600 py-16 text-center">
+        No products found. Try another search.
+    </p>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <a th:each="p : ${products.data}" th:href="@{/products/{slug}(slug=${p.slug})}"
+           class="product-card bg-white rounded-xl border border-emerald-100 overflow-hidden hover:shadow-lg transition">
+            <div class="h-40 bg-emerald-100 flex items-center justify-center text-4xl font-bold text-emerald-600 relative">
+                <span th:text="${p.name.substring(0, 1)}">P</span>
+                <img th:if="${p.imageUrl != null}" th:src="${p.imageUrl}" th:alt="${p.name}"
+                     class="absolute inset-0 w-full h-full object-cover" onerror="this.remove()">
+            </div>
+            <div class="p-4">
+                <div class="flex justify-between items-start gap-2">
+                    <h2 class="font-semibold text-lg text-gray-900" th:text="${p.name}">Name</h2>
+                    <span class="text-xs bg-emerald-50 text-emerald-700 px-2 py-1 rounded-full whitespace-nowrap"
+                          th:text="${p.category.name}">Category</span>
+                </div>
+                <p class="text-sm text-gray-600 mt-1" th:text="${p.tagline}">Tagline</p>
+                <div class="mt-3 text-sm flex items-center gap-2">
+                    <span th:replace="~{fragments/layout :: stars(${p.stars()})}"></span>
+                    <span class="text-gray-500"
+                          th:text="${#numbers.formatDecimal(p.averageRating, 1, 1)} + ' · ' + ${p.reviewCount} + ' reviews'">4.5 · 3 reviews</span>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <nav th:if="${products.totalPages > 1}" class="flex justify-center items-center gap-4 mt-10" aria-label="Pagination">
+        <a th:if="${products.hasPrevious}"
+           th:href="@{/products(q=${criteria.query}, category=${criteria.categorySlug}, sort=${criteria.sort.code}, page=${products.pageNumber - 1})}"
+           class="px-4 py-2 rounded-lg border bg-white hover:bg-emerald-50">&larr; Previous</a>
+        <span class="text-gray-600" th:text="'Page ' + ${products.pageNumber} + ' of ' + ${products.totalPages}">Page 1 of 2</span>
+        <a th:if="${products.hasNext}"
+           th:href="@{/products(q=${criteria.query}, category=${criteria.categorySlug}, sort=${criteria.sort.code}, page=${products.pageNumber + 1})}"
+           class="px-4 py-2 rounded-lg border bg-white hover:bg-emerald-50">Next &rarr;</a>
+    </nav>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

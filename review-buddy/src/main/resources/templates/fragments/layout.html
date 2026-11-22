@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${title} + ' · Review Buddy'">Review Buddy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+
+<nav th:fragment="navbar" class="bg-white border-b border-emerald-100 sticky top-0 z-10">
+    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+        <a th:href="@{/products}" class="flex items-center gap-2 font-bold text-xl text-emerald-700">
+            <span class="inline-flex w-8 h-8 rounded-lg bg-emerald-500 text-white items-center justify-center">R</span>
+            Review Buddy
+        </a>
+        <div class="flex items-center gap-4 text-sm">
+            <a th:href="@{/products}" class="text-gray-700 hover:text-emerald-700">Products</a>
+            <a sec:authorize="isAuthenticated()" th:href="@{/products/new}"
+               class="rounded-lg bg-emerald-600 text-white px-3 py-2 hover:bg-emerald-700">+ Submit product</a>
+            <th:block sec:authorize="isAnonymous()">
+                <a th:href="@{/login}" class="text-gray-700 hover:text-emerald-700">Login</a>
+                <a th:href="@{/registration}" class="rounded-lg border border-emerald-600 text-emerald-700 px-3 py-2 hover:bg-emerald-50">Sign up</a>
+            </th:block>
+            <details sec:authorize="isAuthenticated()" class="relative">
+                <summary class="cursor-pointer list-none text-gray-800 font-medium"
+                         id="current-user" sec:authentication="principal.displayName">User</summary>
+                <div class="absolute right-0 mt-2 w-44 bg-white border rounded-lg shadow-lg p-2">
+                    <form th:action="@{/logout}" method="post">
+                        <button type="submit" class="w-full text-left px-3 py-2 rounded hover:bg-emerald-50">Logout</button>
+                    </form>
+                </div>
+            </details>
+        </div>
+    </div>
+</nav>
+
+<span th:fragment="stars(value)" class="text-amber-500 tracking-tight" th:title="${value} + ' / 5'">
+    <th:block th:each="i : ${#numbers.sequence(1, 5)}"><span th:text="${i <= value} ? '★' : '☆'">★</span></th:block>
+</span>
+
+<footer th:fragment="footer" class="mt-16 border-t border-emerald-100 bg-white">
+    <div class="max-w-6xl mx-auto px-4 py-6 text-sm text-gray-500 flex justify-between">
+        <span>Review Buddy · built with Spring Boot, Spring Modulith &amp; Spring AI</span>
+        <span>Learning project</span>
+    </div>
+</footer>
+</body>
+</html>

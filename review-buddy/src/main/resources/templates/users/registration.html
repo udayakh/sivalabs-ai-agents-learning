@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Sign up')}"></head>
+<body class="min-h-screen">
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<main class="max-w-md mx-auto px-4 py-12">
+    <div class="bg-white rounded-xl border border-emerald-100 p-8">
+        <h1 class="text-2xl font-bold mb-6">Create your account</h1>
+        <form th:action="@{/registration}" th:object="${form}" method="post" class="space-y-4">
+            <div>
+                <label for="name" class="block text-sm font-medium mb-1">Name</label>
+                <input id="name" th:field="*{name}" class="input">
+                <p class="field-error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
+            </div>
+            <div>
+                <label for="email" class="block text-sm font-medium mb-1">Email</label>
+                <input id="email" th:field="*{email}" type="email" class="input">
+                <p class="field-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
+            </div>
+            <div>
+                <label for="password" class="block text-sm font-medium mb-1">Password</label>
+                <input id="password" th:field="*{password}" type="password" class="input">
+                <p class="field-error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
+            </div>
+            <button type="submit" class="w-full rounded-lg bg-emerald-600 text-white px-5 py-2 hover:bg-emerald-700">Sign up</button>
+        </form>
+        <p class="mt-6 text-sm text-gray-600">Already registered? <a th:href="@{/login}" class="text-emerald-700 underline">Login</a></p>
+    </div>
+</main>
+</body>
+</html>

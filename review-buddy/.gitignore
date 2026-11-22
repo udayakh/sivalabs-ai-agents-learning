@@ -1,0 +1,9 @@
+target/
+data/
+mockup/
+.idea/
+*.iml
+.vscode/
+.mcp.json
+.env
+*.log
